@@ -38,19 +38,6 @@ public class CalcApp {
         return lines;
     }
 
-    private static void writeFile(String finalOperation, String resultFileName) {
-
-        try (
-                var fileWriter = new FileWriter(resultFileName, true);
-                var writer = new BufferedWriter(fileWriter);
-        ) {
-            writer.write(finalOperation);
-            writer.newLine();
-        } catch (IOException e) {
-            System.err.println("Nie udało się zapisać do pliku: " + resultFileName);
-        }
-    }
-
     private static void createFile(String filename) {
         File file = new File(filename);
         boolean fileExists = file.exists();
@@ -70,23 +57,29 @@ public class CalcApp {
         }
     }
 
+    private static void writeToFile(Operation[] operations, String resultFileName) {
+        try (
+                var fileWriter = new FileWriter(resultFileName, true);
+                var writer = new BufferedWriter(fileWriter);
+        ) {
+            for (Operation operation : operations) {
+                System.out.println(operation.toString());
+                writer.write(operation.toString());
+                writer.newLine();
+            }
 
-    private static void getOperation(Operation[] operations, String filename) {
-        for (Operation operation : operations) {
-            double result = Calculator.calculate(operation);
-            String finalOperation = operation.toString() + result;
-            System.out.println(finalOperation);
-            writeFile(finalOperation, filename);
+        } catch (IOException e) {
+            System.err.println("Nie udało się zapisać do pliku: " + resultFileName);
         }
     }
 
-    public void useCalculator(String filename) {
+    public void run(String filename) {
         String resultFileName = "result.txt";
 
         createFile(resultFileName);
-        try{
+        try {
             Operation[] operations = readFile(filename);
-            getOperation(operations, resultFileName);
+            writeToFile(operations, resultFileName);
         } catch (FileNotFoundException e) {
             System.out.println("Brak pliku: " + filename);
         }

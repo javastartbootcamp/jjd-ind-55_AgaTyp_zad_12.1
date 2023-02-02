@@ -6,6 +6,6 @@ class Main {
         String fileName = "operations.txt";
         CalcApp calc = new CalcApp();
 
-        calc.useCalculator(fileName);
+        calc.run(fileName);
     }
 }
